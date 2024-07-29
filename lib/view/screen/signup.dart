@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foodapp/screen/otp.dart';
+import 'package:foodapp/viem_model/signup_view_model.dart';
+import 'package:foodapp/view/screen/otp.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart' as loc;
 import 'package:geocoding/geocoding.dart' as geo;
@@ -87,16 +88,15 @@ class _SignupState extends State<Signup> {
       }
     } catch (e) {
       // setState(() {
-        _address = "Error fetching address: $e";
+        print("Error fetching address: $e");
       // });
     }
   }
 
+    final SignupViewModel viewModel = SignupViewModel();
   @override
   Widget build(BuildContext context) {
-    // الحصول على حجم الشاشة
     final screenSize = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: AppBar(
         title: Text('تسجيل حساب جديد', style: TextStyle(color: Colors.white)),
@@ -113,30 +113,30 @@ class _SignupState extends State<Signup> {
             children: <Widget>[
               _buildTextField(
                 label: 'الاسم الاول',
-                onSaved: (value) => _firstName = value,
+                onChange: (value) => viewModel.setFirstName(value??"") ,
               ),
               SizedBox(height: screenSize.height * 0.02),
               _buildTextField(
                 label: 'اسم العائلة',
-                onSaved: (value) => _lastName = value,
+                onChange: (value) => viewModel.setLastName(value??"") ,
               ),
               SizedBox(height: screenSize.height * 0.02),
               _buildTextField(
                 label: 'البريد الإلكتروني',
                 keyboardType: TextInputType.emailAddress,
-                onSaved: (value) => _email = value,
+                onChange: (value) => viewModel.setEmail(value??"") ,
               ),
               SizedBox(height: screenSize.height * 0.02),
               _buildTextField(
                 label: 'رقم الهاتف',
                 keyboardType: TextInputType.phone,
-                onSaved: (value) => _phoneNumber = value,
+                onChange: (value) => viewModel.setPhoneNumber(value??"") ,
               ),
               SizedBox(height: screenSize.height * 0.02),
               _buildTextField(
                 label: 'كلمة المرور',
                 obscureText: true,
-                onSaved: (value) => _password = value,
+                onChange: (value) => _password = value,
               ),
               SizedBox(height: screenSize.height * 0.03),
               Text(
@@ -177,7 +177,7 @@ class _SignupState extends State<Signup> {
     required String label,
     bool obscureText = false,
     TextInputType keyboardType = TextInputType.text,
-    required FormFieldSetter<String?> onSaved,
+    required FormFieldSetter<String?> onChange,
   }) {
     return TextFormField(
       obscureText: obscureText,
@@ -200,7 +200,7 @@ class _SignupState extends State<Signup> {
         }
         return null;
       },
-      onSaved: onSaved,
+      onChanged: onChange,
     );
   }
 }

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:foodapp/controller.dart';
-import 'package:foodapp/screen/otp.dart';
+import 'package:foodapp/view/screen/otp.dart';
 import 'package:get/route_manager.dart';
 import 'package:http/http.dart';
 

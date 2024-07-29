@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodapp/pizza_screen.dart';
-import 'package:foodapp/screen/home_page.dart';
+import 'package:foodapp/view/screen/home_page.dart';
 
 import 'settings.dart';
 

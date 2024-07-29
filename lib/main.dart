@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'screen/welcome.dart';
+import 'view/screen/welcome.dart';
 
 void main() {
   // WidgetsFlutterBinding.ensureInitialized();

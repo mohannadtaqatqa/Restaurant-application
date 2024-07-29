@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:foodapp/screen/login.dart';
-import 'package:foodapp/screen/signup.dart';
+import 'package:foodapp/view/screen/login.dart';
+import 'package:foodapp/view/screen/signup.dart';
 import 'package:get/get.dart';
 
-import '../pizza_screen.dart';
+import '../../pizza_screen.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 
 class Welcome extends StatelessWidget {
