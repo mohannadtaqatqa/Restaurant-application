@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:foodapp/viem_model/signup_view_model.dart';
 import 'package:foodapp/view/screen/otp.dart';
 import 'package:get/get.dart';
 import 'package:location/location.dart' as loc;
 import 'package:geocoding/geocoding.dart' as geo;
+
+import '../../viem_model/signup_view_model.dart';
 
 // تعريف الألوان في أعلى الكود
 const Color primaryColor = Color(0xFF0D47A1); // أزرق داكن
@@ -26,6 +27,8 @@ class _SignupState extends State<Signup> {
   String? _phoneNumber;
   String? _password;
   String? _address;
+
+  final SignupViewModel viewModel = SignupViewModel();
 
   @override
   void initState() {
@@ -56,12 +59,10 @@ class _SignupState extends State<Signup> {
     }
 
     _locationData = await location.getLocation();
-    if (_locationData.latitude != null &&
-        _locationData.longitude != null) {
+    if (_locationData.latitude != null && _locationData.longitude != null) {
       final latitude = _locationData.latitude!;
       final longitude = _locationData.longitude!;
 
-      // قم بإجراء العملية async في مكان آخر قبل تحديث الحالة
       _fetchAddress(latitude, longitude);
     } else {
       setState(() {
@@ -87,13 +88,12 @@ class _SignupState extends State<Signup> {
         });
       }
     } catch (e) {
-      // setState(() {
-        print("Error fetching address: $e");
-      // });
+      setState(() {
+        _address = "Error fetching address: $e";
+      });
     }
   }
 
-    final SignupViewModel viewModel = SignupViewModel();
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -113,24 +113,24 @@ class _SignupState extends State<Signup> {
             children: <Widget>[
               _buildTextField(
                 label: 'الاسم الاول',
-                onChange: (value) => viewModel.setFirstName(value??"") ,
+                onChange: (value) => viewModel.setFirstName(value),
               ),
               SizedBox(height: screenSize.height * 0.02),
               _buildTextField(
                 label: 'اسم العائلة',
-                onChange: (value) => viewModel.setLastName(value??"") ,
+                onChange: (value) => viewModel.setLastName(value),
               ),
               SizedBox(height: screenSize.height * 0.02),
               _buildTextField(
                 label: 'البريد الإلكتروني',
                 keyboardType: TextInputType.emailAddress,
-                onChange: (value) => viewModel.setEmail(value??"") ,
+                onChange: (value) => viewModel.setEmail(value),
               ),
               SizedBox(height: screenSize.height * 0.02),
               _buildTextField(
                 label: 'رقم الهاتف',
                 keyboardType: TextInputType.phone,
-                onChange: (value) => viewModel.setPhoneNumber(value??"") ,
+                onChange: (value) => viewModel.setPhoneNumber(value),
               ),
               SizedBox(height: screenSize.height * 0.02),
               _buildTextField(
@@ -152,7 +152,7 @@ class _SignupState extends State<Signup> {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
                     // قم بإرسال البيانات إلى الخادم أو إجراء آخر هنا
-                    Get.to(()=>OTPScreen());
+                    Get.to(() => OTPScreen());
                   }
                 },
                 child: const Text('تسجيل'),
