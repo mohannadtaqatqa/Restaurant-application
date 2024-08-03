@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-import '../../widget/adv.dart';
+import '../widget/adv.dart';
 import 'menu.dart';
 
 class HomePageUser extends StatefulWidget {

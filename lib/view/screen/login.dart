@@ -1,18 +1,10 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:foodapp/controller.dart';
-import 'package:foodapp/view/screen/otp.dart';
 import 'package:get/route_manager.dart';
 import 'package:http/http.dart';
-
-import 'nav_bar_user.dart';
+import '../../core/constant/colors.dart';
+import 'check_email.dart';
 import 'signup.dart';
-
-const Color primaryColor = Color(0xFF0D47A1); // أزرق داكن
-const Color accentColor = Color(0xFF1976D2); // أزرق متوسط
-const Color textColor = Color(0xFF212121); // نص داكن
-const Color backgroundColor = Color(0xFFF5F5F5); // خلفية فاتحة
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -32,7 +24,7 @@ class _LoginState extends State<Login> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('تسجيل الدخول', style: TextStyle(color: Colors.white)),
+        title: const Text('تسجيل الدخول', style: TextStyle(color: Colors.white)),
         backgroundColor: primaryColor,
         elevation: 0,
         centerTitle: true,
@@ -107,13 +99,11 @@ class _LoginState extends State<Login> {
               label: 'البريد الإلكتروني',
               keyboardType: TextInputType.emailAddress,
               controller: _emailController,
-              // onSaved: (value) => _email = value,
             ),
             SizedBox(height: 16),
             _buildTextField(
               label: 'كلمة المرور',
               obscureText: true,
-              // onSaved: (value) => _password = value,
               controller: _passwordController,
             ),
           ],
@@ -125,9 +115,9 @@ class _LoginState extends State<Login> {
   Widget _buildForgotPasswordButton() {
     return TextButton(
       onPressed: () {
-        Get.to(() => OTPScreen());
+        Get.to(() => EmailInputView());
       },
-      child: Text('نسيت كلمة المرور؟'),
+      child: Text('نسيت كلمة المرور؟', style: TextStyle(color: primaryColor)),
     );
   }
 
@@ -153,51 +143,52 @@ class _LoginState extends State<Login> {
           borderSide: BorderSide(color: primaryColor),
         ),
       ),
-      // validator: (value) {
-      //   if (value == null || value.isEmpty) {
-      //     return 'يرجى إدخال $label';
-      //   }
-      //   return null;
-      // },
-      // onSaved: onSaved,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'يرجى إدخال $label';
+        }
+        return null;
+      },
     );
   }
 
   Widget _buildLoginButton() {
     return ElevatedButton(
       onPressed: () async {
-        try {
-          final response = await post(
-            Uri.parse("http://10.0.2.2:5000/login"),
-            headers: <String, String>{
-              'Content-Type': 'application/json; charset=UTF-8',
-            },
-            body: jsonEncode(<String, String>{
-              'email': _emailController.text,
-              'password': _passwordController.text,
-            }),
-          );
+        if (_formKey.currentState?.validate() ?? false) {
+          try {
+            final response = await post(
+              Uri.parse("http://10.0.2.2:5000/login"),
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+              },
+              body: jsonEncode(<String, String>{
+                'email': _emailController.text,
+                'password': _passwordController.text,
+              }),
+            );
 
-          if (response.statusCode == 200) {
-            // طلب ناجح
-            print('Login successful: ${response.body}');
-          } else {
-            // طلب فشل
-            print('Failed to login: ${response.reasonPhrase}');
+            if (response.statusCode == 200) {
+              // طلب ناجح
+              print('Login successful: ${response.body}');
+            } else {
+              // طلب فشل
+              print('Failed to login: ${response.reasonPhrase}');
+            }
+          } catch (e) {
+            // التعامل مع الأخطاء
+            print('Error occurred: $e');
           }
-        } catch (e) {
-          // التعامل مع الأخطاء
-          print('Error occurred: $e');
         }
       },
       child: Text('تسجيل الدخول'),
       style: ElevatedButton.styleFrom(
-        backgroundColor: primaryColor, // لون الخلفية للأزرار
-        foregroundColor: Colors.white, // لون النص للأزرار
+        backgroundColor: primaryColor,
+        foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12), // زوايا دائرية
+          borderRadius: BorderRadius.circular(12),
         ),
-        padding: EdgeInsets.symmetric(vertical: 16), // مسافة رأسية
+        padding: EdgeInsets.symmetric(vertical: 16),
         textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
     );

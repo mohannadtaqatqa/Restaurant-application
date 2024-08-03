@@ -3,8 +3,6 @@ import 'package:get/route_manager.dart';
 import 'view/screen/welcome.dart';
 
 void main() {
-  // WidgetsFlutterBinding.ensureInitialized();
-  // MobileAds.instance.initialize();
   runApp(const MyApp());
 }
 
