@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'view/screen/welcome.dart';
+import 'view/screen/owner/navbar_owner.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       // home: PizzaScreen(),
-      home:const Welcome()
+      home:const NavBarOwner()
     );
   }
 }

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -10,7 +9,6 @@ class CheckEmailViewModel extends GetxController {
   RxBool isEmailExist = false.obs;
 
   Future<void> emailIsValid() async {
-    print("${checkEmailController.text}");
     final response = await http.get(Uri.parse(
         "http://10.0.2.2:5000/check_Email/${checkEmailController.text}"));
     if (response.statusCode == 200) {
@@ -18,10 +16,19 @@ class CheckEmailViewModel extends GetxController {
       Get.to(() => OTPScreen(email: checkEmailController.text));
     } else if (response.statusCode == 404) {
       isEmailExist.value = false;
-      Get.snackbar("خطا", "البريد الالكتروني غير صحيح");
+      ScaffoldMessenger.of(Get.context!).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("البريد الإلكتروني غير صالح"),
+        ),
+      );
     } else {
-      print(response.body);
-      Get.snackbar("${response.body}", "حدث خطأ ما");
+      ScaffoldMessenger.of(Get.context!).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text("حدث خطأ ما"),
+        ),
+      );
     }
   }
 }
