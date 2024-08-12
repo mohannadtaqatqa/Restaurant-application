@@ -14,7 +14,7 @@ Widget buildTextField({
       keyboardType: keyboardType,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: const TextStyle(color: primaryColor),
+        labelStyle: const TextStyle(color: textColor),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const  BorderSide(color: primaryColor),
@@ -46,16 +46,16 @@ Widget buildDropdownField({
     decoration: InputDecoration(
       labelText: label,
       labelStyle: const TextStyle(
-          color: primaryColor), // أو استخدم اللون الأساسي primaryColor
+          color: primaryColor),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(
-            color: primaryColor), // أو استخدم اللون الأساسي primaryColor
+            color: textColor),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(
-            color: primaryColor), // أو استخدم اللون الأساسي primaryColor
+            color: primaryColor),
       ),
     ),
     items: items.map((String item) {

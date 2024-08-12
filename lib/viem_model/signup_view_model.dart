@@ -1,10 +1,14 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:foodapp/core/constant/endpoints.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:foodapp/view/screen/otp.dart';
+import 'package:get/get.dart';
 import '../models/signup_model.dart';
 
 class SignupViewModel {
-  int? userType ;
+  int? userType;
   User _user = User(
     firstName: '',
     lastName: '',
@@ -21,7 +25,7 @@ class SignupViewModel {
   String? get firstName => _user.firstName;
   void setFirstName(String? firstName) => _user.firstName = firstName;
 
-  String? get lastName => _user.lastName;  
+  String? get lastName => _user.lastName;
   void setLastName(String? lastName) => _user.lastName = lastName;
 
   String? get password => _user.password;
@@ -35,7 +39,6 @@ class SignupViewModel {
 
   String? get address => _user.address;
   void setAddress(String? address) => _user.address = address;
-
 
   void setUserType(int? userType) {
     this.userType = userType;
@@ -53,7 +56,7 @@ class SignupViewModel {
   //       validatePassword(_user.password);
   // }
 
-  // Validate email 
+  // Validate email
   bool validateEmail(String email) {
     return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
   }
@@ -88,14 +91,23 @@ class SignupViewModel {
     try {
       print(id);
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:5000/signup/$id'),
+        Uri.parse('$signupApi$id'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(_user.toJson()),
       );
-
-      if (response.statusCode == 200) {
+      print(response.statusCode);
+      if (response.statusCode == 201) {
         // Handle successful response
+        Get.to(() => OTPScreen(email: email!));
         print('User registered successfully');
+      } else if (response.statusCode == 409) {
+        
+        ScaffoldMessenger.of(Get.context!).showSnackBar(
+           SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(response.body),
+          ),
+        );
       } else {
         // Handle error response
         print('Failed to register user: ${response.body}');

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodapp/core/constant/endpoints.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
 
@@ -12,7 +13,7 @@ class OTPViewModel {
   verifyOTP(String email) async {
     // في تطبيق حقيقي، قد ترغب في التحقق من OTP من خلال خادم
     final res = await post(
-        Uri.parse("http://10.0.2.2:5000/signup/verify/Email"),
+        Uri.parse(verifyEmailApi),
         body: {"code": otpController.text, "Email": email});
 
     print(email);

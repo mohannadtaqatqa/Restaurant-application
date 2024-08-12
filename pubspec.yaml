@@ -25,6 +25,7 @@ dependencies:
   http: ^1.2.2
   smooth_page_indicator: ^1.2.0+3
   settings_ui: ^2.0.2
+  jwt_decode: ^0.3.1
   
 dev_dependencies:
   flutter_test:
@@ -36,6 +37,12 @@ dev_dependencies:
 flutter:
 
   uses-material-design: true
+
+  fonts:
+    - family: Cairo
+      fonts:
+        - asset: assets/Cairo.ttf
+
 
 
   assets:

@@ -3,30 +3,30 @@ import 'package:geocoding/geocoding.dart' as geo;
 
 Future<String?> getLocation() async {
   loc.Location location = loc.Location();
-  bool _serviceEnabled;
-  loc.PermissionStatus _permissionGranted;
-  loc.LocationData? _locationData;
+  bool serviceEnabled;
+  loc.PermissionStatus permissionGranted;
+  loc.LocationData? locationData;
 
-  _serviceEnabled = await location.serviceEnabled();
-  if (!_serviceEnabled) {
-    _serviceEnabled = await location.requestService();
-    if (!_serviceEnabled) {
+  serviceEnabled = await location.serviceEnabled();
+  if (!serviceEnabled) {
+    serviceEnabled = await location.requestService();
+    if (!serviceEnabled) {
       return "Service not enabled";
     }
   }
 
-  _permissionGranted = await location.hasPermission();
-  if (_permissionGranted == loc.PermissionStatus.denied) {
-    _permissionGranted = await location.requestPermission();
-    if (_permissionGranted != loc.PermissionStatus.granted) {
+  permissionGranted = await location.hasPermission();
+  if (permissionGranted == loc.PermissionStatus.denied) {
+    permissionGranted = await location.requestPermission();
+    if (permissionGranted != loc.PermissionStatus.granted) {
       return "Permission denied";
     }
   }
 
-  _locationData = await location.getLocation();
-  if (_locationData.latitude != null && _locationData.longitude != null) {
-    final latitude = _locationData.latitude!;
-    final longitude = _locationData.longitude!;
+  locationData = await location.getLocation();
+  if (locationData.latitude != null && locationData.longitude != null) {
+    final latitude = locationData.latitude!;
+    final longitude = locationData.longitude!;
 
     return _fetchAddress(latitude, longitude);
   } else {

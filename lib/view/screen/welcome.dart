@@ -3,7 +3,8 @@ import 'package:foodapp/view/screen/login.dart';
 import 'package:foodapp/view/screen/signup.dart';
 import 'package:get/get.dart';
 
-import '../../pizza_screen.dart';
+import '../../core/constant/colors.dart';
+
 // import 'package:shared_preferences/shared_preferences.dart';
 
 class Welcome extends StatelessWidget {
@@ -43,6 +44,7 @@ class Welcome extends StatelessWidget {
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 22,
+                              color: primaryColor
                               ),
                         ),
                       ),
@@ -60,7 +62,7 @@ class Welcome extends StatelessWidget {
                       ),
                       TextButton(
                         style: TextButton.styleFrom(
-                            backgroundColor: Colors.blue[900],
+                            backgroundColor: primaryColor,
                             // backgroundColor: Colors.amber,
                             fixedSize: const Size(200.0, 50.0),
                             shape: RoundedRectangleBorder(
@@ -76,10 +78,10 @@ class Welcome extends StatelessWidget {
                               fontFamily: 'Cairo'),
                         ),
                       ),
-                    SizedBox(height: 20,),
+                    const SizedBox(height: 20,),
                     TextButton(
                         style: TextButton.styleFrom(
-                            backgroundColor: Colors.blue[900],
+                            backgroundColor: Colors.black,
                             // backgroundColor: Colors.amber,
                             fixedSize: const Size(200.0, 50.0),
                             shape: RoundedRectangleBorder(

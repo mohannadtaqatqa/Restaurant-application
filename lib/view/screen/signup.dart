@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:foodapp/view/screen/otp.dart';
-import 'package:get/get.dart';
 import '../../core/constant/colors.dart';
 import '../../core/fun/feach_address.dart';
 import '../../viem_model/signup_view_model.dart';
@@ -39,6 +37,7 @@ class _SignupState extends State<Signup> {
         backgroundColor: primaryColor,
         elevation: 0,
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       backgroundColor: backgroundColor,
       body: Padding(
@@ -136,7 +135,6 @@ class _SignupState extends State<Signup> {
                     _formKey.currentState!.save();
                     // قم بإرسال البيانات إلى الخادم أو إجراء آخر هنا
                     viewModel.registerUser(viewModel.userType.toString());
-                    Get.to(() =>  OTPScreen(email:viewModel.email!));
                   }
                 },
                 style: ElevatedButton.styleFrom(

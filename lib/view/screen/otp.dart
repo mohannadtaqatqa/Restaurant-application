@@ -3,6 +3,8 @@ import 'package:foodapp/viem_model/otp_viewmodel.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
+import '../../core/constant/colors.dart';
+
 class OTPScreen extends StatefulWidget {
   const OTPScreen({super.key,required this.email});
   final String email;
@@ -13,9 +15,8 @@ class OTPScreen extends StatefulWidget {
 class _OTPScreenState extends State<OTPScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final OTPViewModel viewModel = Get.put(OTPViewModel());
-  final Color primaryColor = Colors.blue[900]!;
-  final Color secondaryColor = Colors.blueAccent;
-  final Color white = Colors.white;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -35,14 +36,14 @@ class _OTPScreenState extends State<OTPScreen> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
+                  const  Text(
                       'أدخل رمز التحقق المرسل إلى بريدك الإلكتروني',
-                      style: TextStyle(fontSize: 18, color: primaryColor),
+                      style: TextStyle(fontSize: 18, color: textColor),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
                     _buildPinCodeFields(constraints),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
@@ -64,11 +65,11 @@ class _OTPScreenState extends State<OTPScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        padding: EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-                      child: Text('تأكيد', style: TextStyle(fontSize: 16)),
+                      child: const Text('تأكيد', style: TextStyle(fontSize: 16)),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     TextButton(
                       onPressed: () {
                         // إعادة إرسال رمز التحقق
@@ -113,20 +114,9 @@ class _OTPScreenState extends State<OTPScreen> {
       animationDuration: const Duration(milliseconds: 300),
       backgroundColor: Colors.transparent,
       enableActiveFill: true,
-      controller: viewModel.otpController,
-      onCompleted: (value) {
-        // setCodeOtpModel
-        print("value is $value");
-        print("controller is ${viewModel.otpController.text}");
-        print("inputted otp is ${viewModel.otpController.text}");
-      },
-      onChanged: (value) {
-        // معالجة عند تغيير القيمة
-      },
-      beforeTextPaste: (text) {
-        // السماح بلصق النص
-        return true;
-      },
+      controller: viewModel.otpController,    
+      beforeTextPaste: (text) {// السماح بلصق النص
+        return true;},
       validator: (value) {
         if (value == null || value.isEmpty || value.length < 4) {
           return 'يرجى إدخال رمز تحقق صحيح';

@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:foodapp/core/constant/endpoints.dart';
+import 'package:foodapp/models/item_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../../models/cart.dart';
 import '../widget/adv.dart';
+import '../widget/horizaItemList.dart';
 import 'menu.dart';
 
 class HomePageUser extends StatefulWidget {
@@ -18,10 +22,10 @@ class _HomePageUserState extends State<HomePageUser> {
   late Future<List> _futureRestaurants;
 
   // تعريف المتغيرات للألوان
-  final Color primaryColor = Colors.blue;
-  final Color secondaryColor = Colors.orange;
+  final Color primaryColor = Colors.amber;
+  final Color secondaryColor = Colors.amber;
   final Color backgroundColor = Colors.white;
-  final Color cardColor = Colors.orange[100]!;
+  final Color cardColor = Colors.white;
   final Color textColor = Colors.black;
   final Color dividerColor = Colors.grey;
   final Color openColor = Colors.green;
@@ -29,7 +33,7 @@ class _HomePageUserState extends State<HomePageUser> {
   final Color hintColor = Colors.grey[600]!;
 
   Future<List> getItems() async {
-    final response = await http.get(Uri.parse("http://10.0.2.2:5000/popularItems"));
+    final response = await http.get(Uri.parse(popularItemsApi));
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -44,7 +48,7 @@ class _HomePageUserState extends State<HomePageUser> {
   }
 
   Future<List> getRestaurant() async {
-    final response = await http.get(Uri.parse("http://10.0.2.2:5000/restaurants"));
+    final response = await http.get(Uri.parse(restaurantsApi));
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -101,14 +105,18 @@ class _HomePageUserState extends State<HomePageUser> {
                   } else if (snapshot.hasData) {
                     List restaurants = snapshot.data!;
                     return SizedBox(
-                      height: screenHeight * 0.29,
+                      height: screenHeight * 0.32,
                       child: ListView.builder(
                         itemCount: restaurants.length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
                           var restaurant = restaurants[index];
+                          var cart = Cart();
+                            print (cart.name);
+    print (cart.price);
+    print (cart.description);
                           return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 3.0),
                             child: InkWell(
                               onTap: () => Get.to(() => Menu(id: restaurant["RestaurantID"], title: restaurant["Name"])),
                               child: Card(
@@ -118,7 +126,7 @@ class _HomePageUserState extends State<HomePageUser> {
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 child: Container(
-                                  width: screenWidth * 0.4,
+                                  width: screenWidth * 0.39,
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -133,7 +141,7 @@ class _HomePageUserState extends State<HomePageUser> {
                                         ),
                                       ),
                                       const SizedBox(height: 8),
-                                      Text(
+                                      Text( cart.name != null ? cart.name.toString():
                                         restaurant["Name"],
                                         style: TextStyle(
                                           fontSize: 18,

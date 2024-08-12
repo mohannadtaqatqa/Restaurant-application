@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../core/constant/endpoints.dart';
 import '../view/screen/otp.dart';
 
 class CheckEmailViewModel extends GetxController {
@@ -10,7 +11,7 @@ class CheckEmailViewModel extends GetxController {
 
   Future<void> emailIsValid() async {
     final response = await http.get(Uri.parse(
-        "http://10.0.2.2:5000/check_Email/${checkEmailController.text}"));
+        "$checkEmailApi${checkEmailController.text}"));
     if (response.statusCode == 200) {
       isEmailExist.value = true;
       Get.to(() => OTPScreen(email: checkEmailController.text));

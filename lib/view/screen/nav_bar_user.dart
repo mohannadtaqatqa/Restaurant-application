@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foodapp/pizza_screen.dart';
-import 'package:foodapp/view/screen/home_page.dart';
-
+import 'cart.dart';
+import 'home_page.dart';
 import 'settings.dart';
 
 class NavBarUser extends StatefulWidget {
@@ -13,10 +12,11 @@ class NavBarUser extends StatefulWidget {
 
 class _NavBarUserState extends State<NavBarUser> {
   int _selectedIndex = 0;
+  final PageController _pageController = PageController();
 
   final List<Widget> _pages = [
     const HomePageUser(),
-    PizzaScreen(),
+    CartPage(),
     const Text("Order"),
     Settings(),
   ];
@@ -25,6 +25,7 @@ class _NavBarUserState extends State<NavBarUser> {
     setState(() {
       _selectedIndex = index;
     });
+    _pageController.jumpToPage(index); // الانتقال مباشرة إلى الصفحة المطلوبة
   }
 
   @override
@@ -44,8 +45,13 @@ class _NavBarUserState extends State<NavBarUser> {
         showUnselectedLabels: true,
         onTap: _onItemTapped,
       ),
-      body: IndexedStack(
-        index: _selectedIndex,
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
         children: _pages,
       ),
     );
