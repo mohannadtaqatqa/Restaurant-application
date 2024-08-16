@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:foodapp/core/constant/endpoints.dart';
-import 'package:foodapp/models/item_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
@@ -111,10 +110,6 @@ class _HomePageUserState extends State<HomePageUser> {
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
                           var restaurant = restaurants[index];
-                          var cart = Cart();
-                            print (cart.name);
-    print (cart.price);
-    print (cart.description);
                           return Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 3.0),
                             child: InkWell(
@@ -141,7 +136,7 @@ class _HomePageUserState extends State<HomePageUser> {
                                         ),
                                       ),
                                       const SizedBox(height: 8),
-                                      Text( cart.name != null ? cart.name.toString():
+                                      Text( 
                                         restaurant["Name"],
                                         style: TextStyle(
                                           fontSize: 18,

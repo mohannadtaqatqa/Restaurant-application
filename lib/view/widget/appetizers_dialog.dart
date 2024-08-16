@@ -69,14 +69,10 @@ class _AppetizersDialogState extends State<AppetizersDialog> {
                                   Text("السعر : ${appetizer['Price']} شيكل"),
                               value: isSelected,
                               onChanged: (value) {
-                                print(value);
-                                // widget.item.addAll(appetizer);
                                 setState(() {
-                                  widget.selectedItemsState[
-                                          widget.item['ItemID']]
-                                      ![appetizer['ItemID']] = value!;
+                                  widget.selectedItemsState[widget.item[
+                                      'ItemID']]![appetizer['ItemID']] = value!;
                                 });
-                                print(" ${widget.selectedItemsState}");
                               },
                             );
                           },
@@ -115,13 +111,11 @@ class _AppetizersDialogState extends State<AppetizersDialog> {
           child:
               const Text("إضافة للسلة", style: TextStyle(color: Colors.blue)),
           onPressed: () {
-            // widget.item.addAll();
-            //using getx
-            final cart = Get.put(Cart(),permanent: true);
+            final cart = Get.put(Cart());
             cart.appetizers = widget.selectedItemsState.obs;
             cart.setValues(widget.item);
-            print(widget.item);
-            print("${cart.itemId}+${cart.appetizers}");
+            cart.toMap();
+
             Navigator.of(context).pop();
           },
         ),

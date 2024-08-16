@@ -1,73 +1,109 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../core/constant/colors.dart';
+import '../../core/fun/cart_fun.dart';
 import '../../models/cart.dart';
 
 class CartPage extends StatelessWidget {
-  const CartPage({super.key});
-  Cart get cartController => Get.put(Cart());
+  CartPage({super.key});
 
+  final Cart cartController = Get.put(Cart());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cart'),
+        leading: const Icon(Icons.shopping_cart),
+        title: const Text('السلة'),
+        backgroundColor: primaryColor,
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            if (cartController.itemId != null) ...[
-              Card(
-                elevation: 3,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: ListTile(
-                  title: Obx(() => Text(cartController.name?.value ?? 'No name')),
-                  subtitle: Obx(() => Text(cartController.description?.value ?? 'No description')),
-                  trailing: Obx(() => Text("${cartController.price?.value ?? 'No price'} شيكل")),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'Appetizers:',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-              Expanded(
-                child: Obx(() {
-                  print(cartController.name!.value);
-                  if (cartController.appetizers?.isEmpty ?? true) {
-                    return const Center(child: Text('No appetizers selected.'));
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: GetBuilder<Cart>(
+                init: cartController,
+                builder: (controller) {
+                  if (controller.dataList.isEmpty) {
+                    return buildEmptyCartMessage();
+                  } else {
+                    return ListView.builder(
+                      itemCount: controller.dataList.length,
+                      itemBuilder: (context, index) {
+                        return buildCartItem(controller.dataList[index]);
+                      },
+                    );
                   }
-
-                  return ListView.builder(
-                    itemCount: cartController.appetizers?.length ?? 0,
-                    itemBuilder: (context, index) {
-                      final appetizerId = cartController.appetizers?.keys.elementAt(index);
-                      final isSelected = cartController.appetizers?[appetizerId]?.values.any((selected) => selected) ?? false;
-
-                      return isSelected
-                          ? ListTile(
-                              title: Text('Appetizer $appetizerId'), // Customize this with actual data
-                              trailing: Icon(Icons.check_circle, color: Colors.green),
-                            )
-                          : Container();
-                    },
-                  );
-                }),
-              ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  // Add payment handling logic here
                 },
-                child: const Text('Proceed to Payment'),
               ),
-            ] else
-              const Center(child: Text('Your cart is empty.')),
-          ],
-        ),
+            ),
+          ),
+          if(cartController.dataList.isNotEmpty)
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: cardColor,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16.0),
+                topRight: Radius.circular(16.0),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3),
+                  spreadRadius: 3,
+                  blurRadius: 5,
+                  offset: const Offset(0, -3),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("المجموع : ${cartController.totalPrice} شيكل",style: const TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                const Text(
+                  'طريقة الدفع:',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Functionality for Pay on Delivery
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryColor,
+                        ),
+                        child: const Text('الدفع عند الاستلام',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Functionality for Pay at the Restaurant
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryColor,
+                        ),
+                        child: const Text('الدفع في المطعم',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

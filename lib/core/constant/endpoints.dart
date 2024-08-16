@@ -3,6 +3,7 @@ const String appetizersApi = '${appApi}appetizers';
 const String addProductApi = '${appApi}add_product';
 const String checkEmailApi = '${appApi}check_email/';
 const String itemsApi = '${appApi}items/';
+const String itemApi = '${appApi}item/';
 const String restaurantsApi = '${appApi}restaurants/';
 const String loginApi = '${appApi}login';
 const String verifyEmailApi = '${appApi}signup/verify/Email';
