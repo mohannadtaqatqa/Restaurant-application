@@ -8,7 +8,8 @@ class HorizontalItemList extends StatefulWidget {
   final List items;
   final int type;
 
-  const HorizontalItemList({super.key, required this.items, required this.type});
+  const HorizontalItemList(
+      {super.key, required this.items, required this.type});
 
   @override
   State<HorizontalItemList> createState() => _HorizontalItemListState();

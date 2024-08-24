@@ -4,6 +4,7 @@ import '../../core/constant/colors.dart';
 import '../../models/cart.dart';
 import '../../viem_model/menu_vm.dart';
 
+double total = 00.0;
 class AppetizersDialog extends StatefulWidget {
   final Map<String, dynamic> item;
   final MenuViewModel viewModel;
@@ -21,6 +22,8 @@ class AppetizersDialog extends StatefulWidget {
 }
 
 class _AppetizersDialogState extends State<AppetizersDialog> {
+  double appetizersTotal = 0.0;
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -72,6 +75,11 @@ class _AppetizersDialogState extends State<AppetizersDialog> {
                                 setState(() {
                                   widget.selectedItemsState[widget.item[
                                       'ItemID']]![appetizer['ItemID']] = value!;
+                                  if (value) {
+                                    appetizersTotal += appetizer['Price'];
+                                  } else {
+                                    appetizersTotal -= appetizer['Price'];
+                                  }
                                 });
                               },
                             );
@@ -114,8 +122,8 @@ class _AppetizersDialogState extends State<AppetizersDialog> {
             final cart = Get.put(Cart());
             cart.appetizers = widget.selectedItemsState.obs;
             cart.setValues(widget.item);
+            cart.priceAppetizers = appetizersTotal;
             cart.toMap();
-
             Navigator.of(context).pop();
           },
         ),

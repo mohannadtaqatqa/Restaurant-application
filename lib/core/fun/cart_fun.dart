@@ -2,29 +2,51 @@ import 'package:flutter/material.dart';
 import '../../viem_model/cart.vm.dart';
 import '../constant/colors.dart';
 
-Widget buildCartItem(Map<String, dynamic> itemData) {
-  final appetizerMap = itemData['appetizers'] as Map<int, Map<int, bool>>?;
+class CartItemWidget extends StatelessWidget {
+  final Map<String, dynamic> itemData;
+  final Function onDeleteItem; // وظيفة لحذف العنصر الرئيسي من السلة
+  final Function(int) onDeleteAppetizer; // وظيفة لحذف المقبلات
 
-  return Builder(
-    builder: (context) {
-      return Table(
-        columnWidths: const {
-          0: FlexColumnWidth(2),
-          1: FlexColumnWidth(1),
-          2: FixedColumnWidth(50), // Adjusted width for delete button column
-        },
-        border: TableBorder.all(color: Colors.grey.withOpacity(0.5), width: 0.5),
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        children: [
-          // اسماء الاعمدة
-          const TableRow(
-            children: [
+  CartItemWidget({
+    required this.itemData,
+    required this.onDeleteItem,
+    required this.onDeleteAppetizer,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final appetizerMap = itemData['appetizers'] as Map<int, Map<int, bool>>?;
+
+    return FutureBuilder<Map<int, Map<String, dynamic>>>(
+      future: fetchAllAppetizers(appetizerMap),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator(strokeWidth: 1.5));
+        }
+        if (snapshot.hasError || snapshot.data == null) {
+          return const Center(
+            child: Text('حدث خطأ ما', style: TextStyle(fontSize: 12, color: Colors.red)),
+          );
+        }
+
+        final appetizersData = snapshot.data!;
+        return Table(
+          columnWidths: const {
+            0: FlexColumnWidth(2),
+            1: FlexColumnWidth(1),
+            2: FixedColumnWidth(50),
+          },
+          border: TableBorder.all(color: Colors.grey.withOpacity(0.5), width: 0.5),
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          children: [
+            // أسماء الأعمدة
+            const TableRow(children: [
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
                 child: Text(
                   'اسم الصنف',
                   style: TextStyle(
-                    fontSize: 16, // Reduced font size
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: textColor,
                   ),
@@ -35,126 +57,105 @@ Widget buildCartItem(Map<String, dynamic> itemData) {
                 child: Text(
                   'السعر',
                   style: TextStyle(
-                    fontSize: 16, // Reduced font size
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: textColor,
-          ),)),
-          Padding(padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
-          child: Text(
-            'حذف',
-            style: TextStyle(
-              fontSize: 16, // Reduced font size
-              fontWeight: FontWeight.bold,
-              color: textColor
-              ,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
+                child: Text(
+                  'حذف',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: textColor,
+                  ),
+                ),
+              ),
+            ]),
+            // عرض بيانات العنصر الرئيسي
+            buildTableRow(
+              itemName: itemData['ItemName'] ?? 'No name',
+              price: "${itemData['Price'] ?? 'No price'} شيكل",
+              onDelete: () {
+                onDeleteItem(); // استدعاء وظيفة حذف العنصر الرئيسي
+              },
             ),
-          ))
-          ]),
-          TableRow(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
-                child: Text(
-                  itemData['ItemName'] ?? 'No name',
-                  style: const TextStyle(
-                    fontSize: 16, // Reduced font size
-                    fontWeight: FontWeight.bold,
-                    color: accentColor,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
-                child: Text(
-                  "${itemData['Price'] ?? 'No price'} شيكل",
-                  style: const TextStyle(
-                    fontSize: 14, // Reduced font size
-                    fontWeight: FontWeight.bold,
-                    color: primaryColor,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
-                child: IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red, size: 20),
-                  onPressed: () {
-                    // Add your delete functionality here
-                  },
-                ),
-              ),
-            ],
-          ),
-          if (appetizerMap != null)
-            ...appetizerMap.entries.map((entry) {
-              final isSelectedMap = entry.value;
-              return TableRow(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 6.0),
-                    child: buildAppetizersList(isSelectedMap),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 6.0),
-                    child: FutureBuilder(
-                      future: ItemCartVM().item(entry.key.toString()),
-                      builder: (context, snapshot) {
-                        print("entry.key.toString() =========> ${entry.key.toString()}");
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator(strokeWidth: 1.5));
-                        }
-                        if (snapshot.hasError || snapshot.data == null) {
-                          return const Text('حدث خطأ ما',
-                              style: TextStyle(fontSize: 12)); // Reduced font size
-                        }
-                        return Text(
-                          "${snapshot.data[snapshot.data.length - 1]['Price']} شيكل",
-                          style: const TextStyle(color: primaryColor, fontSize: 14),
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(), // Empty cell to keep alignment
-                ],
+            // عرض بيانات المقبلات
+            ...appetizersData.entries.map((entry) {
+              final appetizerId = entry.key;
+              final appetizerData = entry.value;
+              return buildTableRow(
+                itemName: appetizerData['ItemName'] ?? 'No name',
+                price: "${appetizerData['Price']} شيكل",
+                onDelete: () {
+                  onDeleteAppetizer(appetizerId); // استدعاء وظيفة حذف المقبلات
+                },
               );
             }).toList(),
-        ],
-      );
-    }
-  );
-}
-
-Widget buildAppetizersList(Map<int, bool> isSelectedMap) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: isSelectedMap.entries.map((subEntry) {
-      final subId = subEntry.key;
-      final isSelected = subEntry.value;
-
-      if (isSelected) {
-        return FutureBuilder(
-          future: ItemCartVM().item(subId.toString()),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                  child: CircularProgressIndicator(strokeWidth: 1.5));
-            }
-            if (snapshot.hasError || snapshot.data == null) {
-              return const Text('حدث خطأ ما',
-                  style: TextStyle(fontSize: 12)); // Reduced font size
-            }
-            return Text(
-              snapshot.data[snapshot.data.length - 1]['ItemName'],
-              style: const TextStyle(color: accentColor, fontSize: 14),
-            );
-          },
+          ],
         );
-      } else {
-        return Container();
+      },
+    );
+  }
+
+  Future<Map<int, Map<String, dynamic>>> fetchAllAppetizers(
+      Map<int, Map<int, bool>>? appetizerMap) async {
+    final Map<int, Map<String, dynamic>> result = {};
+    if (appetizerMap != null) {
+      for (var entry in appetizerMap.entries) {
+        for (var subEntry in entry.value.entries) {
+          if (subEntry.value) {
+            final appetizerData = await ItemCartVM().fetchItem(subEntry.key.toString());
+            result[subEntry.key] = appetizerData.last;
+          }
+        }
       }
-    }).toList(),
-  );
+    }
+    return result;
+  }
+
+  TableRow buildTableRow({
+    required String itemName,
+    required String price,
+    required VoidCallback onDelete,
+  }) {
+    return TableRow(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
+          child: Text(
+            itemName,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: accentColor,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
+          child: Text(
+            price,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: primaryColor,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6.0),
+          child: IconButton(
+            icon: const Icon(Icons.delete, color: Colors.red, size: 20),
+            onPressed: onDelete,
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 Widget buildEmptyCartMessage() {
@@ -162,8 +163,8 @@ Widget buildEmptyCartMessage() {
     child: Text(
       'سلتك فارغة',
       style: TextStyle(
-        color: accentColor.withOpacity(0.7),
-        fontSize: 14, // Reduced font size
+        color: textColor.withOpacity(0.7),
+        fontSize: 14,
       ),
     ),
   );
