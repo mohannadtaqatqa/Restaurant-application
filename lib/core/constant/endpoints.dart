@@ -9,3 +9,4 @@ const String loginApi = '${appApi}login';
 const String verifyEmailApi = '${appApi}signup/verify/Email';
 const String signupApi = '${appApi}signup/';
 const String popularItemsApi = '${appApi}popularItems';
+const String bookingApi = '${appApi}booking_order';

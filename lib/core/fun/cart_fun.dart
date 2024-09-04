@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../viem_model/cart.vm.dart';
+import '../../viem_model/cart_vm.dart';
 import '../constant/colors.dart';
 
 class CartItemWidget extends StatelessWidget {

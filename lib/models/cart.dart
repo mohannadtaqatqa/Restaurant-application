@@ -1,4 +1,9 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
+import 'package:http/http.dart';
+
+import '../core/constant/endpoints.dart';
 
 class Cart extends GetxController {
   String? itemId;
@@ -93,6 +98,20 @@ class Cart extends GetxController {
 
     // تحديث واجهة المستخدم بعد الحذف
     update();
+  }
+  
+  booking() async {
+    final response = await post(Uri.parse(bookingApi),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'data':"$dataList"
+        }));
+    // if (response.statusCode == 200) {
+    //   return json.decode(response.body);
+    // } else {
+    //   print("Error fetching item data");
+    //   return [];
+    // }
   }
 }
 

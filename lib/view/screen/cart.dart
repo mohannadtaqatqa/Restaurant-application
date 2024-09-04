@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/constant/colors.dart';
 import '../../models/cart.dart';
-import '../../viem_model/cart.vm.dart';
+import '../../viem_model/cart_vm.dart';
 
 class CartPage extends StatelessWidget {
   CartPage({super.key});
@@ -44,9 +44,11 @@ class CartPage extends StatelessWidget {
                       : ListView.builder(
                           itemCount: controller.dataList.length,
                           itemBuilder: (context, index) {
-                            return FutureBuilder<Map<int, Map<String, dynamic>>>(
-                              future: fetchAllAppetizers(controller.dataList[index]
-                                  ['appetizers']?.cast<int, Map<int, bool>>()),
+                            return FutureBuilder<
+                                Map<int, Map<String, dynamic>>>(
+                              future: fetchAllAppetizers(controller
+                                  .dataList[index]['appetizers']
+                                  ?.cast<int, Map<int, bool>>()),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
@@ -54,7 +56,8 @@ class CartPage extends StatelessWidget {
                                       child: CircularProgressIndicator(
                                           strokeWidth: 1.5));
                                 }
-                                if (snapshot.hasError || snapshot.data == null) {
+                                if (snapshot.hasError ||
+                                    snapshot.data == null) {
                                   return const Center(
                                     child: Text('حدث خطأ ما',
                                         style: TextStyle(
@@ -126,20 +129,24 @@ class CartPage extends StatelessWidget {
                                                 0,
                                                 (sum, appetizer) =>
                                                     sum +
-                                                    (appetizer["Price"] ?? 0.0)));
+                                                    (appetizer["Price"] ??
+                                                        0.0)));
                                       },
                                     ),
                                     ...appetizersData.entries.map((entry) {
                                       final appetizerId = entry.key;
                                       appetizerData = entry.value;
                                       return buildTableRow(
-                                        itemName: appetizerData['ItemName'] ?? 'No name',
-                                        price: "${appetizerData['Price'] ?? 0} شيكل",
+                                        itemName: appetizerData['ItemName'] ??
+                                            'No name',
+                                        price:
+                                            "${appetizerData['Price'] ?? 0} شيكل",
                                         onDelete: () {
                                           deleteAppetizer(
                                               index,
                                               appetizerId,
-                                              appetizerData['Price']?.toDouble() ??
+                                              appetizerData['Price']
+                                                      ?.toDouble() ??
                                                   0.0);
                                         },
                                       );
@@ -209,6 +216,7 @@ class CartPage extends StatelessWidget {
                               Expanded(
                                 child: ElevatedButton(
                                   onPressed: () {
+                                    cartController.booking();
                                     // Functionality for Pay at the Restaurant
                                   },
                                   style: ElevatedButton.styleFrom(
@@ -227,7 +235,8 @@ class CartPage extends StatelessWidget {
                         ],
                       ),
                     )
-                  : const SizedBox.shrink(), // This hides the container when the dataList is empty
+                  : const SizedBox
+                      .shrink(), // This hides the container when the dataList is empty
             ],
           );
         },
